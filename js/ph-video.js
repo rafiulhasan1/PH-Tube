@@ -8,7 +8,19 @@ const fetchData = () => {
 }
 
 const localCatagories = (data) =>{
-    console.log(data)
+    // for(const item of data){
+    //     console.log(item)        //for of loop
+    // }
+
+    const categoriesApi = document.getElementById('categories');
+
+    data.forEach(item => {
+        //console.log(item)
+        const button = document.createElement('button')
+        button.classList = "btn";
+        button.innerText = item.category;
+        categoriesApi.appendChild(button);
+    })
 } 
 
 fetchData();
