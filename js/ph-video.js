@@ -23,47 +23,65 @@ function getTime(time){
     return `${hour} Hour ${minute} minute ${second} second ago`
 }
 
+const removeClass = () =>{
+    const re = document.getElementsByClassName("categoryBtn");
+    for(let bn of re){
+        bn.classList.remove("btnColor")
+    }
+}
+
+function localCategoryVideo(catagory){
+    //alert(catagory)
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${catagory}`)
+    .then(res => res.json())
+    .then(data => {
+        removeClass();
+        const activeBtn = document.getElementById(`btn-${catagory}`)
+        activeBtn.classList.add("btnColor")
+        localVideo(data.category)
+    })
+    .catch((error) => console.log(error))
+}
+
 const localCatagories = (data) =>{
-    // for(const item of data){
-    //     console.log(item)        //for of loop
-    // }
 
     const categoriesApi = document.getElementById('categories');
 
     data.forEach(item => {
         //console.log(item)
-        const button = document.createElement('button')
-        button.classList = "btn";
-        button.innerText = item.category;
-        categoriesApi.append(button);
+        const buttonContainer = document.createElement('div')
+        // button.classList = "btn";
+        // button.innerText = item.category;
+        // categoriesApi.append(button);
+        buttonContainer.innerHTML=
+        `
+            <button id="btn-${item.category_id}" onClick="localCategoryVideo(${item.category_id})" class="btn categoryBtn">
+                ${item.category}
+            </button>
+        `
+
+        categoriesApi.append(buttonContainer)
     })
 }
 
-/**
- * {
-    "category_id": "1001",
-    "video_id": "aaaa",
-    "thumbnail": "https://i.ibb.co/L1b6xSq/shape.jpg",
-    "title": "Shape of You",
-    "authors": [
-        {
-            "profile_picture": "https://i.ibb.co/D9wWRM6/olivia.jpg",
-            "profile_name": "Olivia Mitchell",
-            "verified": ""
-        }
-    ],
-    "others": {
-        "views": "100K",
-        "posted_date": "16278"
-    },
-    "description": "Dive into the rhythm of 'Shape of You,' a captivating track that blends pop sensibilities with vibrant beats. Created by Olivia Mitchell, this song has already gained 100K views since its release. With its infectious melody and heartfelt lyrics, 'Shape of You' is perfect for fans looking for an uplifting musical experience. Let the music take over as Olivia's vocal prowess and unique style create a memorable listening journey."
-}
- */
-
-
 const localVideo = (data) => {
     const localVideoId = document.getElementById('local-video');
-    console.log(data)
+    localVideoId.innerHTML = ""
+
+    if(data.length == 0){
+        localVideoId.classList.remove("grid");
+        localVideoId.innerHTML = `
+            <div class="min-h-[600px] w-full flex flex-col gap-5 justify-center items-center">
+                <img src="assets/icon.png" alt="" />
+                <h2 class="font-bold text-gray-500">Oops!! Sorry, There is no content hear</h2>
+            </div>
+        `
+    }
+    else{
+        localVideoId.classList.add("grid");
+    }
+
+    //console.log(data)
     data.forEach(item => {
         // console.log(item.authors[0].profile_name)
         const div = document.createElement('div');
