@@ -15,6 +15,14 @@ const fetchVideoData = () => {
     
 }
 
+function getTime(time){
+    const hour = parseInt(time / 3600);
+    const returnTime = time % 3600;
+    const minute = parseInt(returnTime/60)
+    const second = minute % 60
+    return `${hour} Hour ${minute} minute ${second} second ago`
+}
+
 const localCatagories = (data) =>{
     // for(const item of data){
     //     console.log(item)        //for of loop
@@ -62,11 +70,19 @@ const localVideo = (data) => {
         div.classList = "card bg-base-100";
         div.innerHTML = `
         
-        <figure class="h-[250px]">
-            <img
-            class="h-full w-full object-cover"
-            src=${item.thumbnail}
-            alt="" />
+        <figure class="h-[250px] relative">
+                <img
+                class="h-full w-full object-cover"
+                src=${item.thumbnail}
+                alt="" />
+                ${
+                    item.others.posted_date?.length == 0 
+                    ? "" 
+                    : `<span class="absolute right-1 bottom-1 bg-black text-white rounded p-1">
+                    ${getTime(item.others.posted_date)}
+                    </span>`
+                }
+                
         </figure>
         <div class="flex items-center">
             <div>
